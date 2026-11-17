@@ -9,14 +9,28 @@ import { STALE } from "./verdict";
 const TOKEN = /\{(?:fact:([\w.\-+]+)|claim:([^{}\s]+)|word:([^{}\s]+))\}/g;
 const FACT = /\{fact:([\w.\-+]+)\}/g;
 
+/** These kinds start with the metric ("Revenue for North rose…"); the others with a member. */
+const SUBJECT_FIRST = new Set(["value", "change", "trend", "target", "peak"]);
+
+/** A claim's text for the middle of a sentence: "Over time, revenue for North rose…".
+ * A member name ("North had…") and an acronym ("AOV was…") keep their capitals. */
+export function inlineText(claim: Claim): string {
+  const t = claim.text;
+  if (!SUBJECT_FIRST.has(claim.kind) || t.length < 2 || t[1] === t[1].toUpperCase()) return t;
+  return t[0].toLowerCase() + t.slice(1);
+}
+
 /** Plain text with fact and claim tokens. React escapes the text, so it cannot become markup. */
 export function RichText({ text }: { text: string }) {
   const parts = text.split(TOKEN);
   const out = [];
   for (let i = 0; i < parts.length; i += 4) {
     if (parts[i]) out.push(<Fragment key={i}>{parts[i]}</Fragment>);
+    // A token after words of the same sentence ("Over time, {claim:…}") is mid-sentence.
+    const before = (i === 0 ? parts[0] : `x${parts[i]}`).trimEnd();
+    const mid = before !== "" && !/[.!?]$/.test(before);
     if (parts[i + 1] !== undefined) out.push(<Fact key={`f${i}`} id={parts[i + 1]} />);
-    else if (parts[i + 2] !== undefined) out.push(<ClaimRef key={`c${i}`} id={parts[i + 2]} />);
+    else if (parts[i + 2] !== undefined) out.push(<ClaimRef key={`c${i}`} id={parts[i + 2]} mid={mid} />);
     else if (parts[i + 3] !== undefined) out.push(<WordRef key={`w${i}`} id={parts[i + 3]} />);
   }
   return <>{out}</>;
@@ -79,15 +93,16 @@ function WordRef({ id }: { id: string }) {
 }
 
 /** A claim token: the claim's words, its citation, and a mark when the data no longer supports it. */
-function ClaimRef({ id }: { id: string }) {
+function ClaimRef({ id, mid }: { id: string; mid: boolean }) {
   const { claims, stale, toggle } = useClaims();
   const claim = claims[id];
   if (!claim) return <span className="fact" data-verified="false">No data</span>;
   const isStale = stale.has(id);
   const open = (el: HTMLElement) => toggle(id, el);
+  const text = mid ? inlineText(claim) : claim.text;
   // Tokens hold no spaces, so the text after the last space is whole words and tokens.
-  const cut = claim.text.search(/\s\S*$/) + 1;
-  const [head, tail] = [claim.text.slice(0, cut), claim.text.slice(cut)];
+  const cut = text.search(/\s\S*$/) + 1;
+  const [head, tail] = [text.slice(0, cut), text.slice(cut)];
   return (
     <span className="claim" data-stale={isStale || undefined}>
       <ClaimText claim={claim} text={head} onOpen={open} />

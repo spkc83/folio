@@ -1,7 +1,7 @@
 """Business knowledge in the semantic model: the better direction of a metric and its target.
 
-Code renders "a change for the worse", "the best result", and "misses the target" only from a
-metric's ``better`` and ``target`` fields and checks them like every other claim.
+Code renders "a change for the worse" and "below the target of 35.00%" only from a metric's
+``better`` and ``target`` fields and checks them like every other claim.
 """
 import pytest
 from pydantic import ValidationError
@@ -60,14 +60,15 @@ def test_without_a_direction_a_change_has_no_judgment():
     assert not any("worse" in t or "better" in t for t in _texts(out, facts, "change"))
 
 
-def test_rank_names_the_best_and_the_worst_member_of_a_rate():
+def test_an_extreme_of_a_rate_reads_as_plain_english():
+    """"Telesales had the highest fraud rate of the 4 sales channels (3.50%)", with no
+    ", the worst result" after it: read out loud, that tail sounds like a robot."""
     query, results, facts = channel_case()
     out = claims_for(query, "q1", results, facts, question="How is Retail doing?")
     extremes = _texts(out, facts, "extreme")
-    assert any(t.startswith("Retail had the lowest fraud rate of the") and t.endswith(", the best result")
-               for t in extremes)
-    assert any(t.startswith("Telesales had the highest fraud rate of the") and t.endswith(", the worst result")
-               for t in extremes)
+    assert "Telesales had the highest fraud rate of the 4 sales channels (3.50%)" in extremes
+    assert "Retail had the lowest fraud rate of the 4 sales channels (2.36%)" in extremes
+    assert not any("result" in t for t in extremes)
 
 
 def test_a_total_has_no_best_or_worst_member():
@@ -110,17 +111,26 @@ def test_a_member_that_misses_the_target_gets_a_target_claim():
     query, results, facts = channel_case()
     out = claims_for(query, "q1", results, facts)
     texts = _texts(out, facts, "target")
-    assert "Fraud rate for Telesales was 3.50%, which misses the target of 3.00%" in texts
+    assert "Fraud rate for Telesales was 3.50%, above the target of 3.00%" in texts
     # A member that meets the target is not listed unless the question names it.
     assert not any("Web" in t or "Retail" in t for t in texts)
     # A missed target is the main finding: it leads the section.
-    assert readable(out.claims[0].text, out.facts(facts)).startswith("Fraud rate for Telesales was 3.50%, which misses")
+    assert readable(out.claims[0].text, out.facts(facts)).startswith("Fraud rate for Telesales was 3.50%, above")
 
 
-def test_the_section_total_says_whether_it_meets_the_target():
+def test_the_section_total_names_the_whole_breakdown_and_the_target():
+    """"Total fraud rate across all sales channels was 2.61%, below the target of 3.00%"."""
     query, results, facts = channel_case()
     out = claims_for(query, "q1", results, facts)
-    assert "Fraud rate was 2.61%, which meets the target of 3.00%" in _texts(out, facts, "target")
+    assert ("Total fraud rate across all sales channels was 2.61%, below the target of 3.00%"
+            in _texts(out, facts, "target"))
+
+
+def test_a_total_with_no_breakdown_keeps_its_plain_subject():
+    whole = result(["fraud_rate"], [[0.0261]], [], meta=RATE)
+    facts = to_facts(whole, "q1")
+    out = claims_for(Query(metrics=["fraud_rate"]), "q1", {"q1": whole}, facts)
+    assert _texts(out, facts, "target") == ["Fraud rate was 2.61%, below the target of 3.00%"]
 
 
 def test_a_named_member_gets_a_target_claim_first_even_when_it_meets_the_target():
@@ -128,7 +138,7 @@ def test_a_named_member_gets_a_target_claim_first_even_when_it_meets_the_target(
     out = claims_for(query, "q1", results, facts, question="Is Web on target?")
     first = out.claims[0]
     assert first.kind == "target"
-    assert readable(first.text, out.facts(facts)) == "Fraud rate for Web was 2.46%, which meets the target of 3.00%"
+    assert readable(first.text, out.facts(facts)) == "Fraud rate for Web was 2.46%, below the target of 3.00%"
 
 
 def test_the_target_is_a_derived_fact_and_a_changed_value_fails_the_check():
@@ -220,10 +230,10 @@ def test_the_word_guard_rejects_direction_and_target_words(text):
 
 
 def test_a_miss_that_rounds_to_the_target_says_so():
-    # Partner: 3.0016% shows as 3.00%, which "misses the target of 3.00%" without the note.
+    # Partner: 3.0016% shows as 3.00%, so "above the target of 3.00%" needs the note.
     query, results, facts = channel_case()
     results["q1"].rows[1][1] = 0.030016
     facts = [*to_facts(results["q1"], "q1"), *to_facts(results["q1_total"], "q1_total")]
     out = claims_for(query, "q1", results, facts)
-    assert ("Fraud rate for Partner was 3.00%, which misses the target of 3.00% (both round to 3.00%)"
+    assert ("Fraud rate for Partner was 3.00%, above the target of 3.00% (both round to 3.00%)"
             in _texts(out, facts, "target"))

@@ -257,3 +257,40 @@ def test_r1_asks_about_the_writers_own_additions():
     assert "[cited word]" in question and "add" in question
     assert "outside the cited claims" in note
     assert only_connectors("In short, [cited claim]. Also [cited word] [value].")
+
+
+# --- a claim token inside a sentence --------------------------------------------------------
+
+
+def _series_claim():
+    claims, _ = _claims(series_case())
+    (trend,) = by_kind(claims, "trend")
+    return trend
+
+
+def test_a_claim_after_a_lead_in_starts_in_lower_case():
+    """"Over time, {claim:…}" renders "Over time, fraud loss for West went up and down", not
+    "Over time, Fraud loss for West…"."""
+    trend = _series_claim()
+    text = render_claims(f"Over time, {{claim:{trend.id}}}.", {trend.id: trend})
+    assert text.startswith("Over time, fraud loss for West went up and down:")
+
+
+def test_a_claim_that_starts_a_sentence_keeps_its_capital():
+    trend = _series_claim()
+    claims = {trend.id: trend}
+    assert render_claims(f"{{claim:{trend.id}}}.", claims).startswith("Fraud loss for West")
+    assert render_claims(f"In short. {{claim:{trend.id}}}.", claims).startswith("In short. Fraud loss")
+
+
+def test_a_claim_that_starts_with_a_member_name_keeps_its_capital(regions):
+    by_id, _, top, _ = regions
+    text = render_claims(f"Across regions, {{claim:{top.id}}}.", by_id)
+    assert text.startswith("Across regions, South had the highest")
+
+
+def test_lower_case_leaves_an_acronym_alone():
+    from living_reports.harness.claims import inline_text
+    assert inline_text("AOV was {fact:x}", "value") == "AOV was {fact:x}"
+    assert inline_text("Revenue was {fact:x}", "value") == "revenue was {fact:x}"
+    assert inline_text("North had the highest revenue", "extreme") == "North had the highest revenue"

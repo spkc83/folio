@@ -108,12 +108,39 @@ def readable(text: str, facts: dict[str, Fact]) -> str:
     return FACT_TOKEN.sub(lambda m: facts[m.group(1)].formatted if m.group(1) in facts else "?", text)
 
 
+# These kinds start with the metric ("Revenue for North rose…"); the others start with a member.
+SUBJECT_FIRST = frozenset({"value", "change", "trend", "target", "peak"})
+
+
+def inline_text(text: str, kind: str) -> str:
+    """A claim's text for the middle of a sentence: "Over time, revenue for North rose…".
+
+    Only a claim that starts with the metric gets a lower-case first letter. A member name
+    ("North had…") and an acronym ("AOV was…") keep their capitals."""
+    if kind not in SUBJECT_FIRST or len(text) < 2 or not text[1].islower():
+        return text
+    return text[0].lower() + text[1:]
+
+
+def mid_sentence(before: str) -> bool:
+    """True when a token comes after words of the same sentence ("Over time, {claim:…}")."""
+    before = before.rstrip()
+    return bool(before) and before[-1] not in ".!?"
+
+
 def render_claims(text: str, claims: dict[str, Claim]) -> str:
     """Text with each claim token written as the claim's text (which keeps its fact tokens),
     and each word token as the claim's word."""
     text = WORD_TOKEN.sub(
         lambda m: claims[m.group(1)].word or m.group(0) if m.group(1) in claims else m.group(0), text)
-    return CLAIM_TOKEN.sub(lambda m: claims[m.group(1)].text if m.group(1) in claims else m.group(0), text)
+
+    def claim(m: re.Match) -> str:
+        c = claims.get(m.group(1))
+        if c is None:
+            return m.group(0)
+        return inline_text(c.text, c.kind) if mid_sentence(m.string[:m.start()]) else c.text
+
+    return CLAIM_TOKEN.sub(claim, text)
 
 
 # --- derivation: one function for each kind ------------------------------------------------
@@ -197,9 +224,7 @@ def _rank(p: dict, facts: dict[str, Fact]) -> str | None:
         return f"{p['member']} was tied for {_ordinal(above + 1)} of the {n} {nouns} by {metric}{where} {cited}"
     if above in (0, n - 1):
         word = _top_word(above == 0, p.get("count", False))
-        judged = _judged(above == 0, p.get("better"))
-        tail = f", the {'best' if judged == 'better' else 'worst'} result" if judged else ""
-        return f"{p['member']} had the {word} {metric} of the {n} {nouns}{where} {cited}{tail}"
+        return f"{p['member']} had the {word} {metric} of the {n} {nouns}{where} {cited}"
     return f"{p['member']} ranked {_ordinal(above + 1)} of the {n} {nouns} by {metric}{where} {cited}"
 
 
@@ -218,11 +243,9 @@ def _extreme(p: dict, facts: dict[str, Fact]) -> str | None:
     if share is None:
         return None
     word = _top_word(p["which"] == "max", p.get("count", False))
-    judged = _judged(p["which"] == "max", p.get("better"))
-    tail = f", the {'best' if judged == 'better' else 'worst'} result" if judged else ""
     nouns = p.get("nouns") or _plural(p["noun"])
     return (f"{p['member']} had the {word} {p['metric']} of the {len(p['population'])} {nouns}"
-            f"{p.get('where', '')} ({_t(p['fact'])}{share}){tail}")
+            f"{p.get('where', '')} ({_t(p['fact'])}{share})")
 
 
 def _top_word(top: bool, count: bool) -> str:
@@ -358,13 +381,18 @@ def _target(p: dict, facts: dict[str, Fact]) -> str | None:
     if not _ok(facts, p["fact"], p["target"]) or p.get("better") not in ("higher", "lower"):
         return None
     v, t = facts[p["fact"]].value, facts[p["target"]].value
-    meets = v <= t if p["better"] == "lower" else v >= t
-    text = (f"{p['subject']} {_be(p)} {_t(p['fact'])}, which {'meets' if meets else 'misses'} "
-            f"the target of {_t(p['target'])}")
-    if not meets and facts[p["fact"]].formatted == facts[p["target"]].formatted:
-        # "3.00%, which misses the target of 3.00%" reads as a contradiction: name the rounding.
+    where = "below" if v < t else "above" if v > t else "at"
+    text = f"{p['subject']} {_be(p)} {_t(p['fact'])}, {where} the target of {_t(p['target'])}"
+    if v != t and facts[p["fact"]].formatted == facts[p["target"]].formatted:
+        # "3.00%, above the target of 3.00%" reads as a contradiction: name the rounding.
         text += f" (both round to {_t(p['target'])})"
     return text
+
+
+def misses_target(p: dict, facts: dict[str, Fact]) -> bool:
+    """True when the value is on the wrong side of the target, from the better direction."""
+    v, t = facts[p["fact"]].value, facts[p["target"]].value
+    return v > t if p["better"] == "lower" else v < t
 
 
 def word_of(kind: str, p: dict, facts: dict[str, Fact]) -> str | None:
@@ -894,8 +922,9 @@ def _population_claims(s: _Section, metric: str, members: list[Member], by: str,
     if (target := _target_fact(s, metric)) is not None:
         for m in members:
             p = _target_params(s, metric, f"{label}{_where(seg | m.keys)}", m.fact, target)
-            text = derive("target", p, s.facts) or ""
-            if m not in named and "misses" not in text:
+            if not derive("target", p, s.facts):
+                continue
+            if m not in named and not misses_target(p, s.facts):
                 continue  # a member that meets the target is news only when the question names it
             score = 1070 if m in named else 90  # a miss leads, above the breakdown leader (85)
             _add(s, score, "target", f"{s.ref}.target.{metric}.{_slug(m.label)}", p,
@@ -1042,6 +1071,16 @@ def _member_series_claims(s: _Section, metric: str, member_cols: list[int], sour
                        _slug("_".join([*seg.values(), *m.keys.values()])), boost)
 
 
+def _total_subject(query: Query, main: Result, meta: dict, where: str) -> str | None:
+    """"Total return rate across all regions" for the total of a breakdown. None: no breakdown."""
+    if not query.dimensions:
+        return None
+    by = " and ".join(main.labels.get(d, d) for d in query.dimensions)
+    whole = f"combinations of {by}" if len(query.dimensions) > 1 else _plural(by[:1].lower() + by[1:])
+    label = meta["label"]
+    return f"Total {label[:1].lower() + label[1:]}{where} across all {whole}"
+
+
 def claims_for(
     query: Query,
     ref: str,
@@ -1106,7 +1145,8 @@ def claims_for(
                  seg, period)
             if (target := _target_fact(s, metric)) is not None:
                 _add(s, 82 - n, "target", f"{ref}.target.{metric}",
-                     _target_params(s, metric, subject, total_id, target),
+                     _target_params(s, metric, _total_subject(query, main, meta, where) or subject,
+                                    total_id, target),
                      _evidence(s, metric, None, [EvidenceRow(label=subject, fact=total_id, highlight=True),
                                                  EvidenceRow(label="Target", fact=target)]),
                      seg, period)

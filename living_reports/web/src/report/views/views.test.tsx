@@ -54,7 +54,7 @@ test("with no recommendation, the brief shows the top 3 claims as key points", (
   const cards = screen.getAllByRole("article");
   expect(cards).toHaveLength(3);
   expect(cards[0].textContent).toContain("West had the lowest fraud loss");
-  expect(cards[2].textContent).toContain("West fraud loss rose from $2.11M");
+  expect(cards[2].textContent).toContain("Fraud loss for West rose from $2.11M");
 });
 
 test("the why card's mini table keeps the top 4 rows and the highlighted row", () => {
@@ -99,7 +99,7 @@ test("Claims and proof lists each claim in reading order with its numbers", () =
   expect(cards[0].textContent).toContain("West had the lowest fraud loss of the 4 regions");
   const cited = within(within(cards[0]).getByRole("list", { name: "Numbers cited" })).getAllByRole("listitem");
   expect(cited.map((c) => c.textContent)).toEqual(["Fraud loss · West: $9.29M", "Share of fraud loss · West: 19.03%"]);
-  expect(cards[3].textContent).toContain("West fraud loss rose in 2 of 3 half-years");
+  expect(cards[3].textContent).toContain("Fraud loss for West rose in 2 of 3 half-years");
 });
 
 test("Open the evidence opens the drawer for that claim", async () => {
@@ -159,7 +159,7 @@ test("the narrative renders claims with citations in reading order", () => {
   expect(paragraphs[0]).toBe(
     "West had the lowest fraud loss of the 4 regions ($9.29M, 19.03% of the total)1. By contrast, South had the largest fraud loss of the 4 regions ($15.84M, 32.44% of the total)2.",
   );
-  expect(paragraphs).toContain("West fraud loss rose from $2.11M in 2024 H1 to $2.63M in 2025 Jul–Nov3.");
+  expect(paragraphs).toContain("Fraud loss for West rose from $2.11M in 2024 H1 to $2.63M in 2025 Jul–Nov3.");
 });
 
 test("a section written by code says so", () => {

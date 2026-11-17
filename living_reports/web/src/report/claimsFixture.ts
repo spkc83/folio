@@ -72,14 +72,14 @@ export const CLAIMS: Record<string, Claim> = {
   },
   "q2.change.West": {
     id: "q2.change.West", kind: "change",
-    text: "West fraud loss rose from {fact:q2.derived.half.West.2024-H1} in 2024 H1 to {fact:q2.derived.half.West.2025-H2} in 2025 Jul–Nov",
+    text: "Fraud loss for West rose from {fact:q2.derived.half.West.2024-H1} in 2024 H1 to {fact:q2.derived.half.West.2025-H2} in 2025 Jul–Nov",
     facts: ["q2.derived.half.West.2024-H1", "q2.derived.half.West.2025-H2"], query_ref: "q2", segment: { [R]: "West" },
     period: ["2024-01-01", "2025-11-30"],
     evidence: { counted: COUNTED_WEST, by: "Half-year", rows: [], series: halfSeries, definition: DEFINITION },
   },
   "q2.trend.West.half": {
     id: "q2.trend.West.half", kind: "trend",
-    text: "West fraud loss rose in 2 of 3 half-years: {fact:q2.derived.half.West.2024-H1}, {fact:q2.derived.half.West.2024-H2}, {fact:q2.derived.half.West.2025-H1}, {fact:q2.derived.half.West.2025-H2}",
+    text: "Fraud loss for West rose in 2 of 3 half-years: {fact:q2.derived.half.West.2024-H1}, {fact:q2.derived.half.West.2024-H2}, {fact:q2.derived.half.West.2025-H1}, {fact:q2.derived.half.West.2025-H2}",
     facts: HALVES.map(([k]) => `q2.derived.half.West.${k}`), query_ref: "q2", segment: { [R]: "West" },
     period: ["2024-01-01", "2025-11-30"],
     evidence: { counted: COUNTED_WEST, by: "Half-year", rows: [], series: halfSeries, definition: DEFINITION },

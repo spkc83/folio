@@ -45,7 +45,7 @@ test("an unknown claim shows No data, never invented words", () => {
 test("fact tokens and plain text keep working next to claims", () => {
   const { container } = paragraph("Total {fact:q1_total.fraud_loss}; {claim:q2.change.West}");
   expect(container.querySelector("p")!.textContent).toBe(
-    "Total $48.83M; West fraud loss rose from $2.11M in 2024 H1 to $2.63M in 2025 Jul–Nov3",
+    "Total $48.83M; fraud loss for West rose from $2.11M in 2024 H1 to $2.63M in 2025 Jul–Nov3",
   );
 });
 
@@ -260,4 +260,16 @@ test("the segment table title shows segment values in plain words", async () => 
   await user.click(screen.getByRole("button", { name: "Evidence 3" }));
   await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Show this as a table" }));
   expect(within(screen.getByRole("dialog")).getByText("The data for North east")).toBeTruthy();
+});
+
+test("a claim after a lead-in starts in lower case; a member name keeps its capital", () => {
+  const { container } = paragraph("Over time, {claim:q2.trend.West.half}. Across regions, {claim:q1.extreme.South}.");
+  const text = container.querySelector("p")!.textContent!;
+  expect(text).toMatch(/^Over time, fraud loss for West /);
+  expect(text).toContain("Across regions, South had the largest");
+});
+
+test("a claim that starts a sentence keeps its capital", () => {
+  const { container } = paragraph("In short. {claim:q2.trend.West.half}.");
+  expect(container.querySelector("p")!.textContent).toMatch(/^In short\. Fraud loss for West /);
 });

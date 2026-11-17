@@ -90,7 +90,7 @@ def _key(question: str, ctx: AskContext, selection: Selection | None = None) -> 
 
 # The version of the answer pipeline (routing and narration). A cached answer from an older one
 # is not served.
-NARRATION_VERSION = "claims-15"
+NARRATION_VERSION = "claims-16"
 
 
 def _pipeline() -> str:
