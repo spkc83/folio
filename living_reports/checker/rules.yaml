@@ -1,0 +1,6 @@
+# Compliance owns this file. No API route can change it.
+banned_phrases:
+  - guaranteed
+  - risk-free
+  - certain to
+  - no risk

@@ -1,0 +1,43 @@
+# Insight eval, HR demo: does a report surface each planted story (demos/hr.py)?
+# A story is surfaced when a claim that the report cites matches one of its rules.
+# Story 6 (Redundancy starts in December 2025) needs the next data refresh: not here.
+stories:
+  - id: hr.h1
+    text: Engineering Junior attrition about triples after a reorganization in March 2025.
+    any_of:
+      - {kinds: [change, trend], metric: attrition_rate, segment: {employees.department: Engineering, employees.job_level: Junior}, direction: up}
+      - {kinds: [extreme], metric: attrition_rate, segment: {employees.department: Engineering, employees.job_level: Junior}, direction: up}
+  - id: hr.h2
+    text: Customer support has the highest absence rate, and its absence and overtime rise in every quarter of 2025.
+    any_of:
+      - {kinds: [extreme], metric: absence_rate, segment: {employees.department: Customer support}, direction: up}
+      - {kinds: [change, trend], metric: absence_rate, segment: {employees.department: Customer support}, direction: up}
+  - id: hr.h3
+    text: Manchester misses the 1.2% monthly attrition target; Remote meets it.
+    any_of:
+      - {kinds: [target], metric: attrition_rate, segment: {employees.location: Manchester}, misses: true}
+  - id: hr.h4
+    text: A hiring freeze; new hires fall by about 70% in the second half of 2025.
+    any_of:
+      - {kinds: [change, trend], metric: new_hires, direction: down}
+  - id: hr.h5
+    text: People under 6 months of tenure leave at about 3 times the rate of others.
+    any_of:
+      - {kinds: [extreme], metric: attrition_rate, segment: {employee_months.tenure_band: Under 6 months}, direction: up}
+      - {kinds: [compare], metric: attrition_rate, compare_a: Under 6 months}
+questions:
+  - {story: hr.h1, level: direct, question: "How did attrition for Junior engineers change after March 2025?"}
+  - {story: hr.h1, level: topic, question: "How is attrition moving in Engineering?"}
+  - {story: hr.h1, level: open, question: "Which teams are losing people?"}
+  - {story: hr.h2, level: direct, question: "Which department has the highest absence rate?"}
+  - {story: hr.h2, level: topic, question: "What is the absence rate by department?"}
+  - {story: hr.h2, level: open, question: "Where is absence a problem?"}
+  - {story: hr.h3, level: direct, question: "Does Manchester meet the attrition target?"}
+  - {story: hr.h3, level: topic, question: "What is the attrition rate by location?"}
+  - {story: hr.h3, level: open, question: "Which offices have a retention problem?"}
+  - {story: hr.h4, level: direct, question: "How did new hires change in the second half of 2025?"}
+  - {story: hr.h4, level: topic, question: "How is hiring trending?"}
+  - {story: hr.h4, level: open, question: "Is the workforce growing?"}
+  - {story: hr.h5, level: direct, question: "What is the attrition rate by tenure band?"}
+  - {story: hr.h5, level: topic, question: "How is attrition doing?"}
+  - {story: hr.h5, level: open, question: "Who is most likely to leave?"}

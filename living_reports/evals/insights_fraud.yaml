@@ -1,0 +1,42 @@
+# Insight eval, payments demo: does a report surface each planted story (demos/fraud.py)?
+# A story is surfaced when a claim that the report cites matches one of its rules.
+# Story 6 (Mobile wallet starts in December 2025) needs the next data refresh: not here.
+stories:
+  - id: fraud.f1
+    text: A card-testing burst in August 2025; the Digital goods fraud rate jumps to about 6% that month.
+    any_of:
+      - {kinds: [change, trend], metric: fraud_rate, segment: {merchants.merchant_category: Digital goods}, direction: up}
+      - {kinds: [extreme], metric: fraud_rate, segment: {merchants.merchant_category: Digital goods}, direction: up}
+  - id: fraud.f2
+    text: The cross-border fraud rate is about 4 times the domestic rate.
+    any_of:
+      - {kinds: [compare], metric: fraud_rate, compare_a: Cross-border}
+      - {kinds: [extreme], metric: fraud_rate, segment: {transactions.border: Cross-border}, direction: up}
+  - id: fraud.f3
+    text: Contactless fraud rises in every quarter of 2025.
+    any_of:
+      - {kinds: [change, trend], metric: fraud_rate, segment: {transactions.channel: Contactless}, direction: up}
+  - id: fraud.f4
+    text: Prepaid cards miss the 0.5% fraud-rate target; Platinum cards lose the most per fraud.
+    any_of:
+      - {kinds: [target], metric: fraud_rate, segment: {cards.card_type: Prepaid}, misses: true}
+  - id: fraud.f5
+    text: Electronics in the South has the largest fraud loss of any category and region.
+    any_of:
+      - {kinds: [extreme], metric: fraud_loss, segment: {merchants.merchant_category: Electronics, merchants.merchant_region: South}, direction: up}
+questions:
+  - {story: fraud.f1, level: direct, question: "How did the Digital goods fraud rate change around August 2025?"}
+  - {story: fraud.f1, level: topic, question: "How did the fraud rate move in 2025?"}
+  - {story: fraud.f1, level: open, question: "Were there any unusual fraud events?"}
+  - {story: fraud.f2, level: direct, question: "How does the cross-border fraud rate compare with the domestic rate?"}
+  - {story: fraud.f2, level: topic, question: "What is the fraud rate by border?"}
+  - {story: fraud.f2, level: open, question: "Where is fraud concentrated?"}
+  - {story: fraud.f3, level: direct, question: "How did the Contactless fraud rate change in 2025?"}
+  - {story: fraud.f3, level: topic, question: "How is the fraud rate moving by channel?"}
+  - {story: fraud.f3, level: open, question: "Which payment channels are getting riskier?"}
+  - {story: fraud.f4, level: direct, question: "Do Prepaid cards meet the fraud rate target?"}
+  - {story: fraud.f4, level: topic, question: "What is the fraud rate by card type?"}
+  - {story: fraud.f4, level: open, question: "Which cards are the riskiest?"}
+  - {story: fraud.f5, level: direct, question: "Which merchant category and region has the largest fraud loss?"}
+  - {story: fraud.f5, level: topic, question: "How is fraud loss split by merchant category and region?"}
+  - {story: fraud.f5, level: open, question: "Where are we losing the most money to fraud?"}

@@ -1,0 +1,39 @@
+# Transaction fraud demo: cost per correct answer. Correct means the same result as expected_query.
+# Stories: August card-testing burst (S1), cross-border (S2), contactless rise (S3),
+# Prepaid and Platinum (S4), South Electronics loss (S5).
+- {question: "What is the overall fraud rate?", expected_kind: report, expected_query: {metrics: [fraud_rate]}}
+- {question: "How many transactions do we have?", expected_kind: report, expected_query: {metrics: [transaction_count]}}
+- {question: "What is the total fraud loss?", expected_kind: report, expected_query: {metrics: [fraud_loss]}}
+- {question: "What is the total transaction value?", expected_kind: report, expected_query: {metrics: [transaction_value]}}
+- {question: "What is the chargeback rate?", expected_kind: report, expected_query: {metrics: [chargeback_rate]}}
+- {question: "What is the fraud rate by merchant category?", expected_kind: report, expected_query: {metrics: [fraud_rate], dimensions: [merchants.merchant_category]}}
+- {question: "Show fraud loss by channel.", expected_kind: report, expected_query: {metrics: [fraud_loss], dimensions: [transactions.channel]}}
+- {question: "Break down fraud cases by fraud type.", expected_kind: report, expected_query: {metrics: [fraud_cases], dimensions: [transactions.fraud_type]}}
+- {question: "Which region has the most fraud loss?", expected_kind: report, expected_query: {metrics: [fraud_loss], dimensions: [merchants.merchant_region]}}
+- {question: "How does the decline rate vary by card tier?", expected_kind: report, expected_query: {metrics: [decline_rate], dimensions: [cards.card_tier]}}
+- {question: "How has fraud loss moved month by month?", expected_kind: report, expected_query: {metrics: [fraud_loss], time: {grain: month}}}
+- {question: "Show the monthly trend of the fraud rate.", expected_kind: report, expected_query: {metrics: [fraud_rate], time: {grain: month}}}
+- {question: "What is the quarterly fraud loss rate?", expected_kind: report, expected_query: {metrics: [fraud_loss_rate], time: {grain: quarter}}}
+- {question: "What is the fraud rate for Travel merchants?", expected_kind: report, expected_query: {metrics: [fraud_rate], filters: [{member: merchants.merchant_category, op: eq, values: [Travel]}]}}
+- {question: "How much fraud loss came from the Online channel?", expected_kind: report, expected_query: {metrics: [fraud_loss], filters: [{member: transactions.channel, op: eq, values: [Online]}]}}
+- {question: "What was the fraud loss in 2024?", expected_kind: report, expected_query: {metrics: [fraud_loss], time: {start: "2024-01-01", end: "2025-01-01"}}}
+- {question: "How many transactions were there in March 2025?", expected_kind: report, expected_query: {metrics: [transaction_count], time: {start: "2025-03-01", end: "2025-04-01"}}}
+- {question: "Give me the top 3 merchant categories by fraud loss.", expected_kind: report, expected_query: {metrics: [fraud_loss], dimensions: [merchants.merchant_category], limit: 3}}
+- {question: "Compare the fraud rate between Debit and Credit cards.", expected_kind: report, expected_query: {metrics: [fraud_rate], dimensions: [cards.card_type], filters: [{member: cards.card_type, op: in, values: [Debit, Credit]}]}}
+# S1
+- {question: "What is the monthly fraud rate for Digital goods merchants?", expected_kind: report, expected_query: {metrics: [fraud_rate], filters: [{member: merchants.merchant_category, op: eq, values: [Digital goods]}], time: {grain: month}}}
+# S2
+- {question: "Show the fraud rate by border.", expected_kind: report, expected_query: {metrics: [fraud_rate], dimensions: [transactions.border]}}
+# S3
+- {question: "What is the quarterly fraud rate for Contactless transactions?", expected_kind: report, expected_query: {metrics: [fraud_rate], filters: [{member: transactions.channel, op: eq, values: [Contactless]}], time: {grain: quarter}}}
+# S4
+- {question: "What is the fraud rate by card type?", expected_kind: report, expected_query: {metrics: [fraud_rate], dimensions: [cards.card_type]}}
+# S5
+- {question: "What is the fraud loss by merchant category in the South region?", expected_kind: report, expected_query: {metrics: [fraud_loss], dimensions: [merchants.merchant_category], filters: [{member: merchants.merchant_region, op: eq, values: [South]}]}}
+- {question: "How big is the problem by channel?", expected_kind: clarify, expected_query: null}
+- {question: "Which card type is the worst?", expected_kind: clarify, expected_query: null}
+- {question: "What is the fraud number?", expected_kind: clarify, expected_query: null}
+- {question: "What is the profit by merchant?", expected_kind: out_of_scope, expected_query: null}
+- {question: "How many employees work in each region?", expected_kind: out_of_scope, expected_query: null}
+- {question: "What is the customer satisfaction score?", expected_kind: out_of_scope, expected_query: null}
+- {question: "What will fraud loss be next year?", expected_kind: out_of_scope, expected_query: null}

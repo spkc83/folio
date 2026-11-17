@@ -1,0 +1,67 @@
+/* Citations, the evidence drawer, and the claim cards. Theme tokens only.
+   It also styles Brief and Narrative classes, and loads through the EvidenceDrawer import. */
+
+.cite-sup { line-height: 0; }
+.nowrap { white-space: nowrap; }
+.cite { border: 0; background: none; padding: 0 1px; margin: 0 1px; font: 600 11px/1 var(--sans); color: var(--accent); cursor: pointer; border-radius: 3px; }
+.cite:hover, .cite[aria-expanded="true"] { background: var(--wash); }
+.cite:focus-visible, .drawer :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.claim[data-stale] { text-decoration: underline dotted var(--fail); text-underline-offset: 3px; }
+.stale-note { margin-left: 4px; font-size: 12px; color: var(--fail); text-decoration: none; display: inline-block; }
+
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 20; width: 380px; max-width: 100vw; box-sizing: border-box;
+  overflow-y: auto; background: var(--card); color: var(--ink); border-left: 1px solid var(--line);
+  box-shadow: -8px 0 24px var(--pop-shadow); padding: 18px 20px 28px; font: 400 14px/1.5 var(--sans); }
+.drawer:focus { outline: none; }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; margin: 0 0 10px; }
+.drawer-head .kicker { margin: 0; }
+.drawer-claim { font: 500 16px/1.5 var(--sans); margin: 0 0 6px; }
+.drawer-claim .fact[data-verified="true"] { background: var(--wash); border-bottom: 2px solid var(--accent); padding: 0 3px; border-radius: 3px; }
+.verdict { margin: 0 0 16px; color: var(--ok); font-weight: 600; font-size: 13px; }
+.verdict[data-verdict="stale"] { color: var(--fail); }
+.verdict[data-verdict="unchecked"] { color: var(--open); }
+.drawer-h { margin: 16px 0 6px; font: 600 13px/1.3 var(--sans); color: var(--soft); }
+.drawer-p { margin: 0; }
+.drawer-table { margin-top: 18px; }
+.drawer-table .card { margin: 10px 0 0; padding: 10px 0 0; box-shadow: none; }
+@media (max-width: 640px) { .drawer { width: 100vw; border-left: 0; } }
+
+table.compare td.num, table.compare th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.compare tr[data-highlight] td { font-weight: 600; background: var(--wash); }
+table.compare tr[data-highlight] td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+
+.ev-spark { display: block; width: 100%; height: auto; margin: 0 0 6px; }
+.ev-series { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 4px 12px; font-size: 13px; }
+.ev-series li { display: flex; justify-content: space-between; gap: 8px; color: var(--soft); }
+.ev-series li[data-marked="true"] { color: var(--ink); font-weight: 600; }
+.ev-series .num { font-variant-numeric: tabular-nums; }
+
+.narration-note { margin: 0 0 12px; }
+.stale-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.stale-banner p { margin: 0; }
+.stale-banner .chip { margin: 0; }
+.recommendation { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; margin: 0 0 20px; max-width: 680px; }
+.recommendation .kicker { display: block; margin: 0 0 2px; }
+.recommendation .prose { margin: 0; }
+
+.rec-card { border-left: 3px solid var(--accent); }
+.rec-card .rec-text { font: 600 18px/1.45 var(--sans); margin: 4px 0 6px; }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 8px 0 0; }
+.claim-card { margin: 0; }
+.claim-card p { margin: 0 0 8px; font: 400 15px/1.55 var(--sans); }
+.claim-card .verdict { margin: 0 0 4px; }
+/* A claim card states staleness in its verdict line, so the inline note would repeat it. */
+.claim-card .stale-note { display: none; }
+.rec-flag { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--fail); }
+.claim-card .fact-btn[data-verified="true"] { border-bottom: 2px solid var(--accent); padding: 0 1px; }
+.claim-list { display: grid; gap: 12px; margin: 0 0 18px; }
+.cited { list-style: none; margin: 0 0 8px; padding: 0; font-size: 13px; color: var(--soft); }
+.cited li { margin: 2px 0; }
+.auditors summary { cursor: pointer; color: var(--soft); font-size: 13px; font-weight: 600; margin: 8px 0; }
+/* How each section was checked: the numbers (proven) apart from the words (probable). */
+.section-checks { display: grid; gap: 12px; margin: 0 0 18px; }
+.section-check h3 { margin: 0 0 6px; }
+.section-check ul { list-style: none; margin: 0; padding: 0; font-size: 14px; line-height: 1.5; }
+.section-check li { margin: 2px 0; }
+.section-check strong { font-weight: 600; }
+.drawer .wording-check { color: var(--soft); font-size: 13px; }

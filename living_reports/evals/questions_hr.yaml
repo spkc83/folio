@@ -1,0 +1,39 @@
+# HR demo: cost per correct answer. Correct means the same result as expected_query.
+# Stories: Engineering Junior attrition (S1), Customer support absence (S2), Manchester (S3),
+# hiring freeze (S4), early-tenure leavers (S5).
+- {question: "What is the overall attrition rate?", expected_kind: report, expected_query: {metrics: [attrition_rate]}}
+- {question: "How many employees do we have?", expected_kind: report, expected_query: {metrics: [employee_count]}}
+- {question: "What is the absence rate?", expected_kind: report, expected_query: {metrics: [absence_rate]}}
+- {question: "How many new hires did we make?", expected_kind: report, expected_query: {metrics: [new_hires]}}
+- {question: "What is the average salary?", expected_kind: report, expected_query: {metrics: [average_salary]}}
+- {question: "What is the attrition rate by department?", expected_kind: report, expected_query: {metrics: [attrition_rate], dimensions: [employees.department]}}
+- {question: "Show leavers by leave reason.", expected_kind: report, expected_query: {metrics: [leavers], dimensions: [employee_months.leave_reason]}}
+- {question: "Break down employees by job level.", expected_kind: report, expected_query: {metrics: [employee_count], dimensions: [employees.job_level]}}
+- {question: "How does the average salary vary by department?", expected_kind: report, expected_query: {metrics: [average_salary], dimensions: [employees.department]}}
+- {question: "What is the voluntary attrition rate by location?", expected_kind: report, expected_query: {metrics: [voluntary_attrition_rate], dimensions: [employees.location]}}
+- {question: "How has the attrition rate moved month by month?", expected_kind: report, expected_query: {metrics: [attrition_rate], time: {grain: month}}}
+- {question: "Show the monthly trend of new hires.", expected_kind: report, expected_query: {metrics: [new_hires], time: {grain: month}}}
+- {question: "What is the quarterly absence rate?", expected_kind: report, expected_query: {metrics: [absence_rate], time: {grain: quarter}}}
+- {question: "What is the attrition rate in Engineering?", expected_kind: report, expected_query: {metrics: [attrition_rate], filters: [{member: employees.department, op: eq, values: [Engineering]}]}}
+- {question: "How many people left from the London office?", expected_kind: report, expected_query: {metrics: [leavers], filters: [{member: employees.location, op: eq, values: [London]}]}}
+- {question: "What was the attrition rate in 2024?", expected_kind: report, expected_query: {metrics: [attrition_rate], time: {start: "2024-01-01", end: "2025-01-01"}}}
+- {question: "How many new hires joined in March 2025?", expected_kind: report, expected_query: {metrics: [new_hires], time: {start: "2025-03-01", end: "2025-04-01"}}}
+- {question: "Give me the top 3 departments by leavers.", expected_kind: report, expected_query: {metrics: [leavers], dimensions: [employees.department], limit: 3}}
+- {question: "Compare the absence rate between Sales and Finance.", expected_kind: report, expected_query: {metrics: [absence_rate], dimensions: [employees.department], filters: [{member: employees.department, op: in, values: [Sales, Finance]}]}}
+# S1
+- {question: "What is the monthly attrition rate for Junior staff in Engineering?", expected_kind: report, expected_query: {metrics: [attrition_rate], filters: [{member: employees.department, op: eq, values: [Engineering]}, {member: employees.job_level, op: eq, values: [Junior]}], time: {grain: month}}}
+# S2
+- {question: "What is the quarterly absence rate in Customer support?", expected_kind: report, expected_query: {metrics: [absence_rate], filters: [{member: employees.department, op: eq, values: [Customer support]}], time: {grain: quarter}}}
+# S3
+- {question: "What is the attrition rate by location?", expected_kind: report, expected_query: {metrics: [attrition_rate], dimensions: [employees.location]}}
+# S4
+- {question: "Show new hires by quarter.", expected_kind: report, expected_query: {metrics: [new_hires], time: {grain: quarter}}}
+# S5
+- {question: "What is the attrition rate by tenure band?", expected_kind: report, expected_query: {metrics: [attrition_rate], dimensions: [employee_months.tenure_band]}}
+- {question: "How big is the problem by department?", expected_kind: clarify, expected_query: null}
+- {question: "Which location is the worst?", expected_kind: clarify, expected_query: null}
+- {question: "What is the people number?", expected_kind: clarify, expected_query: null}
+- {question: "What is the revenue by department?", expected_kind: out_of_scope, expected_query: null}
+- {question: "How much fraud loss did we have?", expected_kind: out_of_scope, expected_query: null}
+- {question: "What is the customer satisfaction score?", expected_kind: out_of_scope, expected_query: null}
+- {question: "How many people will leave next year?", expected_kind: out_of_scope, expected_query: null}

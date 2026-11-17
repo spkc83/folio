@@ -1,0 +1,69 @@
+{
+  "tier": "small",
+  "total": 32,
+  "correct": 21,
+  "accuracy": 0.65625,
+  "calls": 130,
+  "input_tokens": 112749,
+  "output_tokens": 82841,
+  "usd": 0.0,
+  "usd_per_correct": 0.0,
+  "tokens_per_correct": 9313.809523809523,
+  "misses": [
+    {
+      "run": "0",
+      "question": "Which region has the most fraud loss?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Break down orders by region.",
+      "got": "out_of_scope"
+    },
+    {
+      "run": "0",
+      "question": "Show order value by tenure band.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How has fraud loss moved month by month?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Show the monthly trend of orders.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How much fraud loss came from the App channel?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How many orders came from the East region?",
+      "got": "out_of_scope"
+    },
+    {
+      "run": "0",
+      "question": "What is the identity theft loss by region?",
+      "got": "out_of_scope"
+    },
+    {
+      "run": "0",
+      "question": "How are we doing on fraud by region?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the fraud number?",
+      "got": "out_of_scope"
+    },
+    {
+      "run": "0",
+      "question": "What will revenue be next year?",
+      "got": "failed"
+    }
+  ]
+}

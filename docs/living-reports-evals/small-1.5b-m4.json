@@ -1,0 +1,144 @@
+{
+  "tier": "small",
+  "total": 32,
+  "correct": 6,
+  "accuracy": 0.1875,
+  "calls": 81,
+  "input_tokens": 59477,
+  "output_tokens": 15392,
+  "usd": 0.0,
+  "usd_per_correct": 0.0,
+  "tokens_per_correct": 12478.166666666666,
+  "misses": [
+    {
+      "run": "0",
+      "question": "How many orders do we have?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the overall fraud rate?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Break down orders by region.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How does fraud rate vary by payment method?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Show order value by tenure band.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How has fraud loss moved month by month?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Show the monthly trend of orders.",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the monthly fraud rate?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What is the fraud rate in the Telesales channel?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "How much fraud loss came from the App channel?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How many orders came from the East region?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What was the fraud loss in 2024?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How many orders were placed in January 2025?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Show fraud loss by channel for 2025.",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the identity theft loss by region?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Give me the top 3 channels by fraud loss.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Compare fraud rate between Web and App.",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "How are we doing on fraud by region?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Should we review the Partner channel? Show its fraud loss by fraud type.",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "How big is the problem by channel?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Which channel is the worst?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What is the fraud number?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the profit by store?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How many employees work in each region?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What is the customer satisfaction score?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What will revenue be next year?",
+      "got": "failed"
+    }
+  ]
+}

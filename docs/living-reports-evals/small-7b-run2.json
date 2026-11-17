@@ -1,0 +1,119 @@
+{
+  "tier": "small",
+  "total": 32,
+  "correct": 11,
+  "accuracy": 0.34375,
+  "calls": 73,
+  "input_tokens": 36735,
+  "output_tokens": 10286,
+  "usd": 0.0,
+  "usd_per_correct": 0.0,
+  "tokens_per_correct": 4274.636363636364,
+  "misses": [
+    {
+      "run": "0",
+      "question": "What is the total fraud loss?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Where is fraud loss concentrated by sales channel?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Which region has the most fraud loss?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Show order value by tenure band.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How has fraud loss moved month by month?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Show the monthly trend of orders.",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the monthly fraud rate?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the fraud rate in the Telesales channel?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How much fraud loss came from the App channel?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How many orders came from the East region?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "How many orders were placed in January 2025?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What is the identity theft loss by region?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Give me the top 3 channels by fraud loss.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How are we doing on fraud by region?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Should we review the Partner channel? Show its fraud loss by fraud type.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How big is the problem by channel?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Which channel is the worst?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What is the fraud number?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "What is the profit by store?",
+      "got": "clarify"
+    },
+    {
+      "run": "0",
+      "question": "How many employees work in each region?",
+      "got": "clarify"
+    },
+    {
+      "run": "0",
+      "question": "What will revenue be next year?",
+      "got": "clarify"
+    }
+  ]
+}

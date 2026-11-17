@@ -1,0 +1,54 @@
+{
+  "tier": "small",
+  "total": 32,
+  "correct": 24,
+  "accuracy": 0.75,
+  "calls": 71,
+  "input_tokens": 45819,
+  "output_tokens": 79140,
+  "usd": 0.0,
+  "usd_per_correct": 0.0,
+  "tokens_per_correct": 5206.625,
+  "misses": [
+    {
+      "run": "0",
+      "question": "Show order value by tenure band.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How has fraud loss moved month by month?",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "Show the monthly trend of orders.",
+      "got": "failed"
+    },
+    {
+      "run": "0",
+      "question": "How are we doing on fraud by region?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "How big is the problem by channel?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "Which channel is the worst?",
+      "got": "report"
+    },
+    {
+      "run": "0",
+      "question": "What is the fraud number?",
+      "got": "out_of_scope"
+    },
+    {
+      "run": "0",
+      "question": "What will revenue be next year?",
+      "got": "report"
+    }
+  ]
+}

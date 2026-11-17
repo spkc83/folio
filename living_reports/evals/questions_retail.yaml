@@ -1,0 +1,40 @@
+# Retail demo: cost per correct answer. Correct means the same result as expected_query.
+# Stories: online growth (S1), Electronics margin fall (S2), North Apparel returns (S3),
+# holiday peak (S4), Outlet margin (S5).
+- {question: "What is the total revenue?", expected_kind: report, expected_query: {metrics: [revenue]}}
+- {question: "How many units did we sell?", expected_kind: report, expected_query: {metrics: [units]}}
+- {question: "What is the overall gross margin?", expected_kind: report, expected_query: {metrics: [gross_margin]}}
+- {question: "What is the return rate?", expected_kind: report, expected_query: {metrics: [return_rate]}}
+- {question: "What is the discount rate?", expected_kind: report, expected_query: {metrics: [discount_rate]}}
+- {question: "Show revenue by channel.", expected_kind: report, expected_query: {metrics: [revenue], dimensions: [sales.channel]}}
+- {question: "What is the gross margin by category?", expected_kind: report, expected_query: {metrics: [gross_margin], dimensions: [products.category]}}
+- {question: "Which region has the highest return rate?", expected_kind: report, expected_query: {metrics: [return_rate], dimensions: [stores.region]}}
+- {question: "Break down revenue by store format.", expected_kind: report, expected_query: {metrics: [revenue], dimensions: [stores.store_format]}}
+- {question: "How does the average sale value vary by customer segment?", expected_kind: report, expected_query: {metrics: [average_sale_value], dimensions: [sales.customer_segment]}}
+- {question: "How has revenue moved month by month?", expected_kind: report, expected_query: {metrics: [revenue], time: {grain: month}}}
+- {question: "Show the monthly trend of the return rate.", expected_kind: report, expected_query: {metrics: [return_rate], time: {grain: month}}}
+- {question: "What is the quarterly gross margin?", expected_kind: report, expected_query: {metrics: [gross_margin], time: {grain: quarter}}}
+- {question: "What is the revenue from the Online channel?", expected_kind: report, expected_query: {metrics: [revenue], filters: [{member: sales.channel, op: eq, values: [Online]}]}}
+- {question: "What is the return rate in the North region?", expected_kind: report, expected_query: {metrics: [return_rate], filters: [{member: stores.region, op: eq, values: [North]}]}}
+- {question: "What was the revenue in 2024?", expected_kind: report, expected_query: {metrics: [revenue], time: {start: "2024-01-01", end: "2025-01-01"}}}
+- {question: "How many units were sold in December 2025?", expected_kind: report, expected_query: {metrics: [units], time: {start: "2025-12-01", end: "2026-01-01"}}}
+- {question: "Show revenue by category for 2025.", expected_kind: report, expected_query: {metrics: [revenue], dimensions: [products.category], time: {start: "2025-01-01", end: "2026-01-01"}}}
+- {question: "Give me the top 3 categories by revenue.", expected_kind: report, expected_query: {metrics: [revenue], dimensions: [products.category], limit: 3}}
+- {question: "Compare the return rate between Online and Store.", expected_kind: report, expected_query: {metrics: [return_rate], dimensions: [sales.channel], filters: [{member: sales.channel, op: in, values: [Online, Store]}]}}
+# S1
+- {question: "Show Online revenue by year.", expected_kind: report, expected_query: {metrics: [revenue], filters: [{member: sales.channel, op: eq, values: [Online]}], time: {grain: year}}}
+# S2
+- {question: "What is the Electronics gross margin by month?", expected_kind: report, expected_query: {metrics: [gross_margin], filters: [{member: products.category, op: eq, values: [Electronics]}], time: {grain: month}}}
+# S3
+- {question: "What is the Apparel return rate by region?", expected_kind: report, expected_query: {metrics: [return_rate], dimensions: [stores.region], filters: [{member: products.category, op: eq, values: [Apparel]}]}}
+# S4
+- {question: "Show the monthly revenue for 2025.", expected_kind: report, expected_query: {metrics: [revenue], time: {start: "2025-01-01", end: "2026-01-01", grain: month}}}
+# S5
+- {question: "What is the gross margin by store format?", expected_kind: report, expected_query: {metrics: [gross_margin], dimensions: [stores.store_format]}}
+- {question: "How big is the problem by category?", expected_kind: clarify, expected_query: null}
+- {question: "Which channel is the best?", expected_kind: clarify, expected_query: null}
+- {question: "What is our performance number?", expected_kind: clarify, expected_query: null}
+- {question: "What is the employee turnover by store?", expected_kind: out_of_scope, expected_query: null}
+- {question: "How much inventory do we hold?", expected_kind: out_of_scope, expected_query: null}
+- {question: "What is the customer satisfaction score?", expected_kind: out_of_scope, expected_query: null}
+- {question: "What will revenue be next year?", expected_kind: out_of_scope, expected_query: null}

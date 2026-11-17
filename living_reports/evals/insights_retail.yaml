@@ -1,0 +1,40 @@
+# Insight eval, retail demo: does a report surface each planted story (demos/retail.py)?
+# A story is surfaced when a claim that the report cites matches one of its rules.
+# Story 6 (Social commerce starts in December 2025) needs the next data refresh: not here.
+stories:
+  - id: retail.s1
+    text: Online revenue grows about 60% from 2024 to 2025; Store revenue is flat.
+    any_of:
+      - {kinds: [change, trend], metric: revenue, segment: {sales.channel: Online}, direction: up}
+  - id: retail.s2
+    text: Electronics gross margin falls from about 30% to about 22% after a discount push from July 2025.
+    any_of:
+      - {kinds: [change, trend], metric: gross_margin, segment: {products.category: Electronics}, direction: down}
+  - id: retail.s3
+    text: The Apparel return rate in the North rises to about 18% in Q4 2025 (others 4-11%).
+    any_of:
+      - {kinds: [change, trend], metric: return_rate, segment: {stores.region: North, products.category: Apparel}, direction: up}
+      - {kinds: [extreme], metric: return_rate, segment: {stores.region: North, products.category: Apparel}, direction: up}
+  - id: retail.s4
+    text: November and December revenue is about 1.6 times an average month.
+    expressible: false  # no claim kind states a seasonal peak
+  - id: retail.s5
+    text: Outlet stores miss the 35% margin target in every quarter.
+    any_of:
+      - {kinds: [target], metric: gross_margin, segment: {stores.store_format: Outlet}, misses: true}
+questions:
+  - {story: retail.s1, level: direct, question: "How did Online revenue change from 2024 to 2025?"}
+  - {story: retail.s1, level: topic, question: "How is revenue changing by channel?"}
+  - {story: retail.s1, level: open, question: "Which sales channels are growing?"}
+  - {story: retail.s2, level: direct, question: "How did the Electronics gross margin change in 2025?"}
+  - {story: retail.s2, level: topic, question: "How is gross margin doing?"}
+  - {story: retail.s2, level: open, question: "Which product categories need attention?"}
+  - {story: retail.s3, level: direct, question: "How did the Apparel return rate in the North change in 2025?"}
+  - {story: retail.s3, level: topic, question: "How are return rates moving by category?"}
+  - {story: retail.s3, level: open, question: "Where are returns a problem?"}
+  - {story: retail.s4, level: direct, question: "Which months have the highest revenue?"}
+  - {story: retail.s4, level: topic, question: "How does revenue move month by month?"}
+  - {story: retail.s4, level: open, question: "Is there seasonality in our sales?"}
+  - {story: retail.s5, level: direct, question: "Do Outlet stores meet the gross margin target?"}
+  - {story: retail.s5, level: topic, question: "How does gross margin compare across store formats?"}
+  - {story: retail.s5, level: open, question: "Which stores are underperforming?"}
